@@ -29,11 +29,23 @@ def main(args):
     # resnet
     net = resnet50(X)
 
+    # 損失関数と学習メソッドの定義
     cross_entropy = -tf.reduce_sum(Y * tf.log(net))
     opt = tf.train.MomentumOptimizer(learning_rate, 0.9)
     train_op = opt.minimize(cross_entropy)
 
+
+
+
+    # セッションの初期化
     sess = tf.Session()
+
+    # Tensorboard
+    with tf.name_scope('summary'):
+        tf.summary.scalar('loss', cross_entropy)
+        merged = tf.summary.merge_all()
+        writer = tf.summary.FileWriter('./logs', sess.graph)
+
     sess.run(tf.initialize_all_variables())
 
     correct_prediction = tf.equal(tf.argmax(net, 1), tf.argmax(Y, 1))
