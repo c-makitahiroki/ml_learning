@@ -9,7 +9,7 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--batch_size", type=str, default=128)
-    parser.add_argument("--epoch_num", type=str, default=10)
+    parser.add_argument("--epoch_num", type=str, default=30)
     parser.add_argument("--learning_rate", type=str, default=0.001)
     parser.add_argument("--datatype", type=str, default="fashion_mnist")
 
@@ -63,6 +63,9 @@ def main(args):
     for j in range(epoch_num):
         for i in range(train_step_num):
             x_train, y_train = read_mnist_datasests(data, batch_size, "train")
+            if i == 0:
+                loss_val = sess.run(cross_entropy, feed_dict={X: x_train, Y: y_train})
+                print(loss_val)
             feed_dict = {X: x_train, Y: y_train, learning_rate: args.learning_rate}
             sess.run([train_op], feed_dict=feed_dict)
 
